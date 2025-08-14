@@ -1,42 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* WhatsApp SaaS Design System - All colors MUST be HSL */
 
 @layer base {
   :root {
+    /* Core brand colors */
+    --whatsapp-green: 142 70% 50%;
+    --whatsapp-green-dark: 142 70% 40%;
+    --whatsapp-green-light: 142 70% 95%;
+    
+    --navy-blue: 225 68% 33%;
+    --navy-blue-dark: 225 68% 25%;
+    --navy-blue-light: 225 68% 95%;
+    
+    --accent-orange: 25 95% 53%;
+    --accent-orange-dark: 25 95% 45%;
+    --accent-orange-light: 25 95% 95%;
+
+    /* Neutral palette */
+    --gray-50: 210 40% 98%;
+    --gray-100: 210 40% 96%;
+    --gray-200: 214 32% 91%;
+    --gray-300: 213 27% 84%;
+    --gray-400: 215 20% 65%;
+    --gray-500: 220 14% 46%;
+    --gray-600: 215 28% 17%;
+    --gray-700: 217 33% 17%;
+    --gray-800: 222 47% 11%;
+    --gray-900: 222 84% 5%;
+
+    /* Semantic colors */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: var(--gray-900);
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: var(--gray-900);
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: var(--gray-900);
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: var(--whatsapp-green);
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: var(--navy-blue);
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: var(--accent-orange);
+    --accent-foreground: 0 0% 100%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --muted: var(--gray-100);
+    --muted-foreground: var(--gray-500);
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: var(--gray-200);
+    --input: var(--gray-200);
+    --ring: var(--whatsapp-green);
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--whatsapp-green)), hsl(var(--whatsapp-green-dark)));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--navy-blue)), hsl(var(--navy-blue-dark)));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--accent-orange)), hsl(var(--accent-orange-dark)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--whatsapp-green)) 0%, hsl(var(--navy-blue)) 100%);
+    
+    /* Shadows */
+    --shadow-soft: 0 2px 8px hsl(var(--gray-900) / 0.04);
+    --shadow-medium: 0 4px 12px hsl(var(--gray-900) / 0.08);
+    --shadow-large: 0 8px 24px hsl(var(--gray-900) / 0.12);
+    --shadow-hero: 0 20px 40px hsl(var(--whatsapp-green) / 0.15);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --sidebar-background: 0 0% 98%;
 
@@ -100,6 +142,55 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+  }
+
+  code {
+    font-family: 'Fira Code', monospace;
+  }
+}
+
+@layer components {
+  .btn-hero {
+    @apply bg-gradient-to-r from-primary to-secondary text-white font-semibold px-8 py-4 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105;
+    background-image: var(--gradient-hero);
+    box-shadow: var(--shadow-hero);
+  }
+
+  .btn-primary {
+    @apply bg-primary text-primary-foreground font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:opacity-90 hover:scale-105;
+    box-shadow: var(--shadow-medium);
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:opacity-90 hover:scale-105;
+    box-shadow: var(--shadow-medium);
+  }
+
+  .btn-outline {
+    @apply border-2 border-primary text-primary bg-transparent font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:bg-primary hover:text-primary-foreground;
+  }
+
+  .feature-card {
+    @apply bg-card rounded-2xl p-8 border border-border transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
+  }
+
+  .section-padding {
+    @apply py-20 px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-custom {
+    @apply max-w-7xl mx-auto;
   }
 }

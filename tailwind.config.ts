@@ -18,6 +18,11 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				sans: ['Inter', 'sans-serif'],
+				heading: ['Poppins', 'sans-serif'],
+				mono: ['Fira Code', 'monospace'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -61,6 +66,33 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				whatsapp: {
+					DEFAULT: 'hsl(var(--whatsapp-green))',
+					dark: 'hsl(var(--whatsapp-green-dark))',
+					light: 'hsl(var(--whatsapp-green-light))'
+				},
+				navy: {
+					DEFAULT: 'hsl(var(--navy-blue))',
+					dark: 'hsl(var(--navy-blue-dark))',
+					light: 'hsl(var(--navy-blue-light))'
+				},
+				orange: {
+					DEFAULT: 'hsl(var(--accent-orange))',
+					dark: 'hsl(var(--accent-orange-dark))',
+					light: 'hsl(var(--accent-orange-light))'
+				},
+				gray: {
+					50: 'hsl(var(--gray-50))',
+					100: 'hsl(var(--gray-100))',
+					200: 'hsl(var(--gray-200))',
+					300: 'hsl(var(--gray-300))',
+					400: 'hsl(var(--gray-400))',
+					500: 'hsl(var(--gray-500))',
+					600: 'hsl(var(--gray-600))',
+					700: 'hsl(var(--gray-700))',
+					800: 'hsl(var(--gray-800))',
+					900: 'hsl(var(--gray-900))'
 				}
 			},
 			borderRadius: {
