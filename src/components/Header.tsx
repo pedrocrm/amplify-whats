@@ -16,9 +16,9 @@ const Header = () => {
             <div className="bg-gradient-to-r from-primary to-secondary p-2 rounded-lg">
               <MessageSquare className="h-6 w-6 text-white" />
             </div>
-            <span className="text-xl font-heading font-bold text-gray-900">
+            <a href="/" className="text-xl font-heading font-bold text-gray-900 hover:text-primary transition-colors">
               WhatsApp SaaS
-            </span>
+            </a>
           </div>
 
           {/* Desktop Navigation */}
@@ -26,14 +26,17 @@ const Header = () => {
             <a href="#funcionalidades" className="text-gray-600 hover:text-primary transition-colors">
               Funcionalidades
             </a>
+            <a href="#arquitetura" className="text-gray-600 hover:text-primary transition-colors">
+              Arquitetura
+            </a>
             <a href="#precos" className="text-gray-600 hover:text-primary transition-colors">
               Preços
             </a>
-            <a href="#documentacao" className="text-gray-600 hover:text-primary transition-colors">
+            <a href="/docs" className="text-gray-600 hover:text-primary transition-colors">
               Documentação
             </a>
-            <a href="#api" className="text-gray-600 hover:text-primary transition-colors">
-              API
+            <a href="/dashboard" className="text-gray-600 hover:text-primary transition-colors">
+              Dashboard
             </a>
             <a href="#contato" className="text-gray-600 hover:text-primary transition-colors">
               Contato
@@ -42,9 +45,9 @@ const Header = () => {
 
           {/* Desktop CTA Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" className="text-gray-600 hover:text-primary">
+            <a href="/dashboard" className="text-gray-600 hover:text-primary transition-colors">
               Login
-            </Button>
+            </a>
             <Button className="btn-primary">
               Teste Grátis
             </Button>
@@ -66,22 +69,25 @@ const Header = () => {
               <a href="#funcionalidades" className="block px-4 py-2 text-gray-600 hover:text-primary transition-colors">
                 Funcionalidades
               </a>
+              <a href="#arquitetura" className="block px-4 py-2 text-gray-600 hover:text-primary transition-colors">
+                Arquitetura
+              </a>
               <a href="#precos" className="block px-4 py-2 text-gray-600 hover:text-primary transition-colors">
                 Preços
               </a>
-              <a href="#documentacao" className="block px-4 py-2 text-gray-600 hover:text-primary transition-colors">
+              <a href="/docs" className="block px-4 py-2 text-gray-600 hover:text-primary transition-colors">
                 Documentação
               </a>
-              <a href="#api" className="block px-4 py-2 text-gray-600 hover:text-primary transition-colors">
-                API
+              <a href="/dashboard" className="block px-4 py-2 text-gray-600 hover:text-primary transition-colors">
+                Dashboard
               </a>
               <a href="#contato" className="block px-4 py-2 text-gray-600 hover:text-primary transition-colors">
                 Contato
               </a>
               <div className="px-4 pt-4 space-y-2">
-                <Button variant="ghost" className="w-full justify-start text-gray-600">
+                <a href="/dashboard" className="block w-full text-left px-4 py-2 text-gray-600 hover:text-primary transition-colors">
                   Login
-                </Button>
+                </a>
                 <Button className="btn-primary w-full">
                   Teste Grátis
                 </Button>
