@@ -4,8 +4,7 @@ import {
   Shield, 
   Cloud, 
   Smartphone, 
-  Code, 
-  GitBranch,
+  Code,
   Server,
   Globe,
   Lock
@@ -15,7 +14,7 @@ const architectureComponents = [
   {
     category: "Frontend",
     icon: Smartphone,
-    color: "from-blue-500 to-blue-600",
+    color: "from-primary to-secondary",
     items: [
       { name: "React 18.3.1", description: "Framework moderno e performático" },
       { name: "TypeScript", description: "Tipagem estática para maior segurança" },
@@ -26,7 +25,7 @@ const architectureComponents = [
   {
     category: "Backend",
     icon: Server,
-    color: "from-green-500 to-green-600",
+    color: "from-secondary to-primary",
     items: [
       { name: "Supabase", description: "Backend-as-a-Service completo" },
       { name: "PostgreSQL", description: "Banco de dados robusto" },
@@ -37,7 +36,7 @@ const architectureComponents = [
   {
     category: "Integrações",
     icon: Zap,
-    color: "from-purple-500 to-purple-600",
+    color: "from-accent to-primary",
     items: [
       { name: "OpenAI GPT", description: "IA para chatbot inteligente" },
       { name: "WhatsApp API", description: "Integração oficial" },
@@ -48,7 +47,7 @@ const architectureComponents = [
   {
     category: "Segurança",
     icon: Shield,
-    color: "from-red-500 to-red-600",
+    color: "from-destructive to-accent",
     items: [
       { name: "JWT Auth", description: "Autenticação segura" },
       { name: "RLS", description: "Row Level Security" },
