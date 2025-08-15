@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { authRateLimiter, validateEmail, validatePasswordStrength } from '@/lib/security';
+import { securityLogger } from '@/lib/securityLogger';
 import { useToast } from '@/hooks/use-toast';
+import { useSessionManager } from '@/hooks/useSessionManager';
 
 interface AuthState {
   user: User | null;
@@ -28,6 +30,9 @@ export const useSecureAuth = () => {
     loading: true,
   });
   const { toast } = useToast();
+  
+  // Initialize session manager for automatic timeout handling
+  useSessionManager(authState.session);
 
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -39,11 +44,13 @@ export const useSecureAuth = () => {
           loading: false,
         });
 
-        // Log security events
-        if (event === 'SIGNED_IN') {
-          console.log('Security: User signed in successfully');
+        // Log security events with enhanced monitoring
+        if (event === 'SIGNED_IN' && session?.user) {
+          securityLogger.logAuthSuccess(session.user.id, session.user.email || 'unknown');
         } else if (event === 'SIGNED_OUT') {
-          console.log('Security: User signed out');
+          // Session cleanup is handled by useSessionManager
+        } else if (event === 'TOKEN_REFRESHED') {
+          // Token refresh is normal, no logging needed
         }
       }
     );
@@ -95,6 +102,7 @@ export const useSecureAuth = () => {
 
       // Check rate limiting
       if (authRateLimiter.isBlocked(email)) {
+        securityLogger.logAuthBlocked(email, 5); // Assuming 5 attempts threshold
         toast({
           title: "Too many attempts",
           description: "Please wait before trying again",
@@ -115,6 +123,7 @@ export const useSecureAuth = () => {
 
       if (error) {
         authRateLimiter.recordAttempt(email);
+        securityLogger.logAuthFailure(email, `Sign up failed: ${error.message}`);
         toast({
           title: "Sign up failed",
           description: error.message,
@@ -157,6 +166,7 @@ export const useSecureAuth = () => {
 
       // Check rate limiting
       if (authRateLimiter.isBlocked(email)) {
+        securityLogger.logAuthBlocked(email, 5); // Assuming 5 attempts threshold
         toast({
           title: "Account temporarily locked",
           description: "Too many failed attempts. Please try again later",
@@ -172,6 +182,7 @@ export const useSecureAuth = () => {
 
       if (error) {
         authRateLimiter.recordAttempt(email);
+        securityLogger.logAuthFailure(email, `Sign in failed: ${error.message}`);
         toast({
           title: "Sign in failed",
           description: error.message,
