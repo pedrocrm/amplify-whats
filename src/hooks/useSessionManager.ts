@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { securityLogger } from '@/lib/securityLogger';
@@ -33,7 +33,7 @@ export const useSessionManager = (session: Session | null, config: SessionManage
     lastActivityRef.current = Date.now();
   };
 
-  const handleSessionTimeout = async () => {
+  const handleSessionTimeout = useCallback(async () => {
     if (session?.user) {
       securityLogger.logSessionExpired(session.user.id);
       
@@ -45,17 +45,17 @@ export const useSessionManager = (session: Session | null, config: SessionManage
         variant: "destructive",
       });
     }
-  };
+  }, [session?.user, toast]);
 
-  const showTimeoutWarning = () => {
+  const showTimeoutWarning = useCallback(() => {
     toast({
       title: "Session Expiring Soon",
       description: `Your session will expire in ${config.warningMinutes} minutes due to inactivity.`,
       variant: "default",
     });
-  };
+  }, [config.warningMinutes, toast]);
 
-  const startSessionTimer = () => {
+  const startSessionTimer = useCallback(() => {
     resetTimers();
     
     if (!session) return;
@@ -72,12 +72,12 @@ export const useSessionManager = (session: Session | null, config: SessionManage
     timeoutRef.current = setTimeout(() => {
       handleSessionTimeout();
     }, timeoutMs);
-  };
+  }, [session, config.timeoutMinutes, config.warningMinutes, showTimeoutWarning, handleSessionTimeout]);
 
-  const extendSession = () => {
+  const extendSession = useCallback(() => {
     updateLastActivity();
     startSessionTimer();
-  };
+  }, [startSessionTimer]);
 
   useEffect(() => {
     if (session) {
@@ -107,7 +107,7 @@ export const useSessionManager = (session: Session | null, config: SessionManage
     } else {
       resetTimers();
     }
-  }, [session]);
+  }, [session, extendSession, startSessionTimer]);
 
   return {
     extendSession,
