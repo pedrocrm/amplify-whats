@@ -1,0 +1,129 @@
+name: Build and Deploy Documentation
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'src/pages/Documentation.tsx'
+      - 'src/components/**'
+      - 'README.md'
+      - 'package.json'
+      - '.github/workflows/build-documentation.yaml'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'src/pages/Documentation.tsx'
+      - 'src/components/**'
+      - 'README.md'
+      - 'package.json'
+      - '.github/workflows/build-documentation.yaml'
+  workflow_dispatch: # Allow manual trigger
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Build job
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      build-successful: ${{ steps.build-step.outputs.success }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint code
+        run: npm run lint
+        continue-on-error: true # Don't fail build on lint warnings
+
+      - name: Build application
+        id: build-step
+        run: |
+          npm run build
+          echo "success=true" >> $GITHUB_OUTPUT
+        env:
+          # Ensure proper base path for GitHub Pages
+          VITE_BASE_PATH: ${{ github.repository_name }}
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+      - name: Generate build summary
+        run: |
+          echo "## Documentation Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Build completed successfully" >> $GITHUB_STEP_SUMMARY
+          echo "📦 Artifacts uploaded for deployment" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 Documentation will be available at: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/" >> $GITHUB_STEP_SUMMARY
+
+  # Deployment job
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Post deployment summary
+        run: |
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "🚀 Documentation deployed successfully" >> $GITHUB_STEP_SUMMARY
+          echo "🌐 Live URL: ${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "📅 Deployed at: $(date)" >> $GITHUB_STEP_SUMMARY
+
+  # Health check job (only runs after successful deployment)
+  health-check:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: [build, deploy]
+    steps:
+      - name: Wait for deployment
+        run: sleep 30
+
+      - name: Check documentation site health
+        run: |
+          SITE_URL="${{ needs.deploy.outputs.page_url || format('https://{0}.github.io/{1}/', github.repository_owner, github.event.repository.name) }}"
+          echo "Checking site health at: $SITE_URL"
+          
+          # Check if site responds with 200
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$SITE_URL" || echo "000")
+          
+          if [ "$HTTP_STATUS" = "200" ]; then
+            echo "✅ Documentation site is healthy (HTTP $HTTP_STATUS)"
+            echo "## Health Check Results" >> $GITHUB_STEP_SUMMARY
+            echo "✅ Site is accessible and responding correctly" >> $GITHUB_STEP_SUMMARY
+            echo "🔗 Verified URL: $SITE_URL" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Documentation site health check failed (HTTP $HTTP_STATUS)"
+            echo "## Health Check Results" >> $GITHUB_STEP_SUMMARY
+            echo "❌ Site health check failed (HTTP $HTTP_STATUS)" >> $GITHUB_STEP_SUMMARY
+            echo "🔗 Attempted URL: $SITE_URL" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi

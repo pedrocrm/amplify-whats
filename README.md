@@ -1,5 +1,14 @@
 # Welcome to your Lovable project
 
+[![Documentation Build](https://github.com/pedrocrm/amplify-whats/actions/workflows/build-documentation.yaml/badge.svg)](https://github.com/pedrocrm/amplify-whats/actions/workflows/build-documentation.yaml)
+[![Datadog Synthetics](https://github.com/pedrocrm/amplify-whats/actions/workflows/datadog-synthetics.yml/badge.svg)](https://github.com/pedrocrm/amplify-whats/actions/workflows/datadog-synthetics.yml)
+
+## 📖 Documentation
+
+View our live documentation at: **[https://pedrocrm.github.io/amplify-whats/](https://pedrocrm.github.io/amplify-whats/)**
+
+The documentation is automatically built and deployed from the main branch whenever changes are made to documentation-related files.
+
 ## Project info
 
 **URL**: https://lovable.dev/projects/86210d73-b519-4a65-ac07-2d468485a865
